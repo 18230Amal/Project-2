@@ -3,6 +3,7 @@
    2. View all players with strike rate = (runs x 100) / balls
    3. Search player by name
 */
+
 #include <stdio.h>
 #include <string.h>
 
@@ -10,10 +11,10 @@
 
 int main()
 {
-    char name[MAX][30];     /* player names */
-    int runs[MAX];          /* runs scored */
-    int balls[MAX];         /* balls faced */
-    int count = 0;          /* number of players added; S.No. = i + 1 */
+    char name[MAX][30];
+    int runs[MAX];
+    int balls[MAX];
+    int count = 0;
     int choice = 0, i, found;
     char key[30];
     float sr;
@@ -25,20 +26,35 @@ int main()
         printf("3. Search Player by Name\n");
         printf("4. Exit\n");
         printf("Enter your choice: ");
-        scanf("%d", &choice);
+
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input! Enter a number.\n");
+            return 1;
+        }
 
         switch (choice) {
+
         case 1:
             if (count == MAX) {
                 printf("Cannot add: storage full (%d players).\n", MAX);
                 break;
             }
+
             printf("Enter player name: ");
-            scanf(" %29[^\n]", name[count]);   /* reads name with spaces */
+            scanf(" %29[^\n]", name[count]);
+
             printf("Enter runs scored: ");
-            scanf("%d", &runs[count]);
+            if (scanf("%d", &runs[count]) != 1 || runs[count] < 0) {
+                printf("Invalid runs entered.\n");
+                return 1;
+            }
+
             printf("Enter balls faced: ");
-            scanf("%d", &balls[count]);
+            if (scanf("%d", &balls[count]) != 1 || balls[count] < 0) {
+                printf("Invalid balls entered.\n");
+                return 1;
+            }
+
             count++;
             printf("Player added with S.No. %d\n", count);
             break;
@@ -48,14 +64,21 @@ int main()
                 printf("No players added yet.\n");
                 break;
             }
-            printf("\n%-6s %-25s %6s %6s %12s\n", "S.No.", "Name", "Runs", "Balls", "Strike Rate");
+
+            printf("\n%-6s %-25s %6s %6s %12s\n",
+                   "S.No.", "Name", "Runs", "Balls", "Strike Rate");
+
             printf("----------------------------------------------------------\n");
+
             for (i = 0; i < count; i++) {
+
                 if (balls[i] > 0)
-                    sr = (runs[i] * 100.0) / balls[i];
+                    sr = (100.0 * runs[i]) / balls[i];
                 else
                     sr = 0;
-                printf("%-6d %-25s %6d %6d %12.2f\n", i + 1, name[i], runs[i], balls[i], sr);
+
+                printf("%-6d %-25s %6d %6d %12.2f\n",
+                       i + 1, name[i], runs[i], balls[i], sr);
             }
             break;
 
@@ -64,25 +87,34 @@ int main()
                 printf("No players added yet.\n");
                 break;
             }
+
             printf("Enter player name to search: ");
             scanf(" %29[^\n]", key);
+
             found = 0;
+
             for (i = 0; i < count; i++) {
+
                 if (strcmp(name[i], key) == 0) {
+
                     if (balls[i] > 0)
-                        sr = (runs[i] * 100.0) / balls[i];
+                        sr = (100.0 * runs[i]) / balls[i];
                     else
                         sr = 0;
-                    printf("S.No.: %d\n", i + 1);
+
+                    printf("\nS.No.: %d\n", i + 1);
                     printf("Name: %s\n", name[i]);
                     printf("Runs: %d\n", runs[i]);
                     printf("Balls: %d\n", balls[i]);
                     printf("Strike Rate: %.2f\n", sr);
+
                     found = 1;
                 }
             }
+
             if (found == 0)
                 printf("No player found with name %s\n", key);
+
             break;
 
         case 4:
@@ -92,7 +124,9 @@ int main()
         default:
             printf("Invalid choice. Enter 1 to 4.\n");
         }
+
     } while (choice != 4);
 
     return 0;
 }
+
